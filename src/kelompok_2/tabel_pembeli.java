@@ -6,10 +6,15 @@ package kelompok_2;
 
 /**
  *
- * @author NIA
+ * @author Nia Oktalina
  */
+import java.awt.HeadlessException;
 import java.sql.*;
 import javax.swing.JOptionPane;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 public class tabel_pembeli extends javax.swing.JFrame {
     Connection con;
@@ -27,9 +32,85 @@ public class tabel_pembeli extends javax.swing.JFrame {
         DB.koneksi();
         con = DB.cn;
         stat = DB.st;
+        
+        // menentukan apa yang terjadi saat salah satu baris row/baris pada 
+        // tabel jika dipilih (oleh mouse maupun keyboard)
+        tabel.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
+                @Override
+                public void valueChanged(ListSelectionEvent event) {
+                    // tidak ada row yang terpilih, maka jangan lakukan apa-apa
+                    if(tabel.getSelectionModel().isSelectionEmpty()){
+                        return;
+                    }
+                    vid_pembeli.setText(tabel.getValueAt(tabel.getSelectedRow(), 0).toString());
+                    vnama.setText(tabel.getValueAt(tabel.getSelectedRow(), 1).toString());
+                    bedit.setEnabled(true);
+                    bhapus.setEnabled(true);
+                    bsimpan.setEnabled(false);
+                }
+            }); 
+        
+        // menentukan apa yang terjadi saat teks pada text vid_pembeli berubah 
+        // baik oleh keyboard maupun copy paste
+        vid_pembeli.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                setTombolBerdasarkanTextField();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                setTombolBerdasarkanTextField();
+            }
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                setTombolBerdasarkanTextField();
+            }
+        });
+        
+        // menentukan apa yang terjadi saat teks pada text vnama berubah 
+        // baik oleh keyboard maupun copy paste
+        vnama.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                setTombolBerdasarkanTextField();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                setTombolBerdasarkanTextField();
+            }
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                setTombolBerdasarkanTextField();
+            }
+        });
+
+        
         tampil();
         
         
+    }
+    
+    private void setTombolBerdasarkanTextField(){
+        // periksa jika tombol vid_pembeli atau vnama ada yang masih kosong
+        if (vid_pembeli.getText().isEmpty() || vnama.getText().isEmpty()) {
+            // periksa apakah baris/row pada tabel ada yang sedang terpilih
+            if(tabel.getSelectionModel().isSelectionEmpty()){
+                bsimpan.setEnabled(false);
+            }else{
+                bedit.setEnabled(false);
+            }
+        } else {
+            // periksa apakah baris/row pada tabel ada yang sedang terpilih
+            if(tabel.getSelectionModel().isSelectionEmpty()){
+                bsimpan.setEnabled(true);
+            }else{
+                bedit.setEnabled(true);
+            }
+        }        
     }
 
     /**
@@ -41,49 +122,97 @@ public class tabel_pembeli extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
+        jPanel1 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
-        bsimpan = new javax.swing.JButton();
-        bhapus = new javax.swing.JButton();
         vid_pembeli = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
         vnama = new javax.swing.JTextField();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        tabel = new javax.swing.JTable();
+        jPanel2 = new javax.swing.JPanel();
+        bbaru = new javax.swing.JButton();
+        bsimpan = new javax.swing.JButton();
         bedit = new javax.swing.JButton();
+        bhapus = new javax.swing.JButton();
+        jPanel3 = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tabel = new javax.swing.JTable(){
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            };
+        };
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setFocusable(false);
-        getContentPane().setLayout(null);
+        setMinimumSize(new java.awt.Dimension(200, 100));
 
-        jLabel1.setText("nama pembeli");
-        getContentPane().add(jLabel1);
-        jLabel1.setBounds(80, 80, 90, 14);
+        jLabel2.setText("ID Pembeli");
 
-        jLabel2.setText("id pembeli");
-        getContentPane().add(jLabel2);
-        jLabel2.setBounds(80, 40, 70, 14);
+        jLabel1.setText("Nama Pembeli");
 
-        bsimpan.setText("simpan");
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(vnama, javax.swing.GroupLayout.PREFERRED_SIZE, 334, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(vid_pembeli, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(vid_pembeli, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(vnama, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 14, Short.MAX_VALUE))
+        );
+
+        jPanel2.setLayout(new java.awt.GridLayout(1, 0, 5, 5));
+
+        bbaru.setText("Baru");
+        bbaru.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bbaruActionPerformed(evt);
+            }
+        });
+        jPanel2.add(bbaru);
+
+        bsimpan.setText("Simpan");
+        bsimpan.setEnabled(false);
         bsimpan.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 bsimpanActionPerformed(evt);
             }
         });
-        getContentPane().add(bsimpan);
-        bsimpan.setBounds(57, 118, 80, 23);
+        jPanel2.add(bsimpan);
 
-        bhapus.setText("hapus");
+        bedit.setText("Edit");
+        bedit.setEnabled(false);
+        bedit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                beditActionPerformed(evt);
+            }
+        });
+        jPanel2.add(bedit);
+
+        bhapus.setText("Hapus");
+        bhapus.setEnabled(false);
         bhapus.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 bhapusActionPerformed(evt);
             }
         });
-        getContentPane().add(bhapus);
-        bhapus.setBounds(160, 120, 80, 23);
-        getContentPane().add(vid_pembeli);
-        vid_pembeli.setBounds(230, 30, 100, 30);
-        getContentPane().add(vnama);
-        vnama.setBounds(230, 70, 100, 30);
+        jPanel2.add(bhapus);
+
+        jPanel3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jPanel3.setLayout(new java.awt.BorderLayout());
 
         tabel.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -96,52 +225,102 @@ public class tabel_pembeli extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        tabel.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jScrollPane1.setViewportView(tabel);
 
-        getContentPane().add(jScrollPane1);
-        jScrollPane1.setBounds(80, 160, 260, 100);
+        jPanel3.add(jScrollPane1, java.awt.BorderLayout.CENTER);
 
-        bedit.setText("edit");
-        bedit.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                beditActionPerformed(evt);
-            }
-        });
-        getContentPane().add(bedit);
-        bedit.setBounds(260, 120, 90, 23);
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 463, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 0, Short.MAX_VALUE))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(22, 22, 22)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, 157, Short.MAX_VALUE))
+        );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void bsimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bsimpanActionPerformed
+        boolean idPembeliSudahAda = false;
         try {
             sql = "INSERT INTO pembeli VALUES ('"+vid_pembeli.getText()+"','"+vnama.getText()+"')";
             stat.execute(sql);
             JOptionPane.showMessageDialog(null,"Data Berhasil Disimpan");
+            tampil();
+            kosongkanTextField();
             
-        } catch (Exception e) {
-            e.getMessage();
+        } catch (SQLException | HeadlessException e) {
+            idPembeliSudahAda = e.getMessage().substring(0, 15).equals("Duplicate entry");
+            if(!idPembeliSudahAda){
+                System.err.println(e.getMessage());
+            }
+        }
+        if (idPembeliSudahAda) {
+            int jawaban = JOptionPane.showConfirmDialog(null, "Pembeli dengan ID " + vid_pembeli.getText() + " sudah ada.\nApakah data pembeli tersebut akan diperbarui dengan data yang baru dimasukkan?", "Data sudah ada, timpa?", JOptionPane.YES_NO_OPTION);
+            if (jawaban == JOptionPane.YES_OPTION) {
+                editDataPembeli();
+            }
         }
     }//GEN-LAST:event_bsimpanActionPerformed
 
     private void bhapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bhapusActionPerformed
         try {
-            sql = "update pembeli set nama = '"+vnama.getText()+"',jenis_tiket = '"+vjenis_tiket.getSelectedItem().toString()+"',jumlah = '"+vjumlah_tiket.getText()+"' where id_pembeli = '"+vid_pembeli.getText()+"'";
+            sql = "delete from pembeli where id_pembeli = '"+vid_pembeli.getText()+"'";
             stat.execute(sql);
-            JOptionPane.showMessageDialog(null, "data berhasil diedit");
-        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Data berhasil dihapus");
+            tampil();
+            kosongkanTextField();
+        } catch (SQLException | HeadlessException e) {
+            System.err.println(e.getMessage());
         }
     }//GEN-LAST:event_bhapusActionPerformed
 
-    private void beditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_beditActionPerformed
+    private void editDataPembeli(){
         try {
-            sql = "update pembeli set nama = '"+vnama.getText()+"',jenis_tiket = '"+vjenis_tiket.getSelectedItem().toString()+"',jumlah = '"+vjumlah_tiket.getText()+"' where id_pembel = '"+vid_pembeli.getText()+"'";
+            sql = "update pembeli set nama = '"+vnama.getText()+"' where id_pembeli = '"+vid_pembeli.getText()+"'";
             stat.execute(sql);
-            JOptionPane.showMessageDialog(null, "data berhasil diedit");
-        } catch (Exception e) {
-        }
+            JOptionPane.showMessageDialog(null, "Data berhasil diedit");
+            tampil();
+        } catch (SQLException | HeadlessException e) {
+            System.err.println(e.getMessage());
+        }        
+    }
+    
+    private void beditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_beditActionPerformed
+        editDataPembeli();
     }//GEN-LAST:event_beditActionPerformed
-    public void tampil(){
+
+    private void bbaruActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bbaruActionPerformed
+        kosongkanTextField();
+    }//GEN-LAST:event_bbaruActionPerformed
+
+    private void kosongkanTextField(){
+        tabel.clearSelection();
+        vid_pembeli.setText(null);
+        vnama.setText(null);
+
+        vid_pembeli.requestFocus();
+        bedit.setEnabled(false);
+        bhapus.setEnabled(false);
+        bsimpan.setEnabled(false);
+        
+    }
+        private void tampil(){
         int n = 0;
         DefaultTableModel tableModel;
         tabel.setToolTipText("");
@@ -158,10 +337,13 @@ public class tabel_pembeli extends javax.swing.JFrame {
                 String data[]={id,nama};
                 tableModel.addRow(data);
             }
-        } catch (Exception e) {
-        }
+        } catch (SQLException e) {
+              System.err.println(e.getMessage());
+      }
         
     }
+    
+    
     /**
      * @param args the command line arguments
      */
@@ -182,13 +364,7 @@ public class tabel_pembeli extends javax.swing.JFrame {
                     break;
                 }
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(tabel_pembeli.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(tabel_pembeli.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(tabel_pembeli.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(tabel_pembeli.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
@@ -198,17 +374,22 @@ public class tabel_pembeli extends javax.swing.JFrame {
          */
         java.awt.EventQueue.invokeLater(new Runnable() {
 
+            @Override
             public void run() {
                 new tabel_pembeli().setVisible(true);
             }
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton bbaru;
     private javax.swing.JButton bedit;
     private javax.swing.JButton bhapus;
     private javax.swing.JButton bsimpan;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tabel;
     private javax.swing.JTextField vid_pembeli;

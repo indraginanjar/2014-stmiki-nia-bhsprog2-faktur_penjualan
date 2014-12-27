@@ -16,7 +16,8 @@ public class koneksidatabase {
             Class.forName("com.mysql.jdbc.Driver");
             cn = DriverManager.getConnection("jdbc:mysql://localhost/dbfaktur_penjualan", "root", "");
             st = cn.createStatement();
-        } catch (Exception e) {
+        } catch (ClassNotFoundException | SQLException e) {
+            System.err.println(e.getMessage());
             JOptionPane.showMessageDialog(null,"koneksi gagal : "+ e);
         }
     }
