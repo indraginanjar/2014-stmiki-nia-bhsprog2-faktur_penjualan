@@ -1,4 +1,4 @@
 #src/kelompok_2/koneksidatabase.java
-#build/classes/kelompok_2/*class
-#/dist/
-#/build/
+build/classes/kelompok_2/*class
+/dist/
+/build/
