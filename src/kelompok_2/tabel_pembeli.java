@@ -19,10 +19,7 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import net.sf.dynamicreports.jasper.builder.JasperReportBuilder;
 import net.sf.dynamicreports.report.builder.DynamicReports;
-import net.sf.dynamicreports.report.builder.column.ColumnBuilders;
-import net.sf.dynamicreports.report.builder.component.ComponentBuilders;
 import net.sf.dynamicreports.report.builder.component.TextFieldBuilder;
-import net.sf.dynamicreports.report.builder.style.PaddingBuilder;
 import net.sf.dynamicreports.report.builder.style.StyleBuilder;
 import net.sf.dynamicreports.report.constant.HorizontalAlignment;
 import net.sf.dynamicreports.report.exception.DRException;
@@ -333,6 +330,7 @@ public class tabel_pembeli extends javax.swing.JFrame {
     }//GEN-LAST:event_bbaruActionPerformed
 
     private void breportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_breportActionPerformed
+        /* masukkan data dari database ke report */
         String pembeli_sql = "select * from pembeli";
         JasperReportBuilder rb = DynamicReports.report();
         rb.setDataSource(pembeli_sql, this.con);
@@ -341,6 +339,7 @@ public class tabel_pembeli extends javax.swing.JFrame {
                 , DynamicReports.col.column("Nama", "nama", DynamicReports.type.stringType())
         );
         
+        /* atur tampilan report */
         TextFieldBuilder titleField = DynamicReports.cmp.text("Pembeli");
         titleField.setStyle(DynamicReports.stl.style()
                 .bold()
@@ -363,8 +362,9 @@ public class tabel_pembeli extends javax.swing.JFrame {
         rb.setTitleStyle(titleStyle);
         rb.setColumnTitleStyle(columnTitleStyle);
         rb.setColumnStyle(columnStyle);
-        //rb.detail(DynamicReports.cmp.horizontalGap(100));
+
         try{
+            // tampilkan report
             rb.show();
         }catch(DRException e){
             
