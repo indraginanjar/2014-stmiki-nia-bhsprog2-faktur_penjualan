@@ -10,7 +10,12 @@ import javax.swing.JOptionPane;
 public class koneksidatabase {
     Connection cn;
     Statement st;
-    public void koneksi()
+    
+    public koneksidatabase(){
+        
+    }
+    
+    public void buka_koneksi()
     {
         try {
             Class.forName("com.mysql.jdbc.Driver");

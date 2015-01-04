@@ -8,6 +8,7 @@ package kelompok_2;
  *
  * @author Nia Oktalina
  */
+import java.awt.Color;
 import java.awt.HeadlessException;
 import java.sql.*;
 import javax.swing.JOptionPane;
@@ -16,6 +17,18 @@ import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
+import net.sf.dynamicreports.jasper.builder.JasperReportBuilder;
+import net.sf.dynamicreports.report.builder.DynamicReports;
+import net.sf.dynamicreports.report.builder.column.ColumnBuilders;
+import net.sf.dynamicreports.report.builder.component.ComponentBuilders;
+import net.sf.dynamicreports.report.builder.component.TextFieldBuilder;
+import net.sf.dynamicreports.report.builder.style.PaddingBuilder;
+import net.sf.dynamicreports.report.builder.style.StyleBuilder;
+import net.sf.dynamicreports.report.constant.HorizontalAlignment;
+import net.sf.dynamicreports.report.exception.DRException;
+import org.apache.log4j.BasicConfigurator;
+
+
 public class tabel_pembeli extends javax.swing.JFrame {
     Connection con;
     Statement stat;
@@ -29,7 +42,7 @@ public class tabel_pembeli extends javax.swing.JFrame {
     public tabel_pembeli() {
         initComponents();
         koneksidatabase DB = new koneksidatabase();
-        DB.koneksi();
+        DB.buka_koneksi();
         con = DB.cn;
         stat = DB.st;
         
@@ -88,6 +101,7 @@ public class tabel_pembeli extends javax.swing.JFrame {
             }
         });
 
+        BasicConfigurator.configure();
         
         tampil();
         
@@ -132,6 +146,7 @@ public class tabel_pembeli extends javax.swing.JFrame {
         bsimpan = new javax.swing.JButton();
         bedit = new javax.swing.JButton();
         bhapus = new javax.swing.JButton();
+        breport = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tabel = new javax.swing.JTable(){
@@ -210,6 +225,14 @@ public class tabel_pembeli extends javax.swing.JFrame {
             }
         });
         jPanel2.add(bhapus);
+
+        breport.setText("Report");
+        breport.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                breportActionPerformed(evt);
+            }
+        });
+        jPanel2.add(breport);
 
         jPanel3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jPanel3.setLayout(new java.awt.BorderLayout());
@@ -309,6 +332,45 @@ public class tabel_pembeli extends javax.swing.JFrame {
         kosongkanTextField();
     }//GEN-LAST:event_bbaruActionPerformed
 
+    private void breportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_breportActionPerformed
+        String pembeli_sql = "select * from pembeli";
+        JasperReportBuilder rb = DynamicReports.report();
+        rb.setDataSource(pembeli_sql, this.con);
+        rb.columns(
+                DynamicReports.col.column("ID", "id_pembeli", DynamicReports.type.integerType())
+                , DynamicReports.col.column("Nama", "nama", DynamicReports.type.stringType())
+        );
+        
+        TextFieldBuilder titleField = DynamicReports.cmp.text("Pembeli");
+        titleField.setStyle(DynamicReports.stl.style()
+                .bold()
+                .setFontSize(24)
+                .setHorizontalAlignment(HorizontalAlignment.CENTER));
+        rb.title(titleField);
+        
+        StyleBuilder titleStyle         = DynamicReports.stl.style().bold()
+                .setFontSize(24)
+                .setHorizontalAlignment(HorizontalAlignment.CENTER); 
+        StyleBuilder boldStyle         = DynamicReports.stl.style().bold(); 
+	StyleBuilder boldCenteredStyle = DynamicReports.stl.style(boldStyle)
+	                                    .setHorizontalAlignment(HorizontalAlignment.CENTER);
+	StyleBuilder columnTitleStyle  = DynamicReports.stl.style(boldCenteredStyle)
+	                                    .setBorder(DynamicReports.stl.pen1Point())
+	                                    .setBackgroundColor(Color.LIGHT_GRAY);
+	StyleBuilder columnStyle  = DynamicReports.stl.style().setPadding(5)
+	                                    .setBorder(DynamicReports.stl.pen1Point());
+        
+        rb.setTitleStyle(titleStyle);
+        rb.setColumnTitleStyle(columnTitleStyle);
+        rb.setColumnStyle(columnStyle);
+        //rb.detail(DynamicReports.cmp.horizontalGap(100));
+        try{
+            rb.show();
+        }catch(DRException e){
+            
+        }
+    }//GEN-LAST:event_breportActionPerformed
+
     private void kosongkanTextField(){
         tabel.clearSelection();
         vid_pembeli.setText(null);
@@ -384,6 +446,7 @@ public class tabel_pembeli extends javax.swing.JFrame {
     private javax.swing.JButton bbaru;
     private javax.swing.JButton bedit;
     private javax.swing.JButton bhapus;
+    private javax.swing.JButton breport;
     private javax.swing.JButton bsimpan;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
